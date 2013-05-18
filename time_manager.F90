@@ -106,14 +106,17 @@ module time_manager
 
         temp2 = current_sec + advance_time_in
         current_sec = mod (temp2, max_sec + 1)
+        current_sec = max (current_sec, min_sec)
         temp = temp2/(max_sec + 1)
 
         temp2 = current_min + temp
         current_min = mod (current_min + temp, max_min + 1) 
+        current_min = max (current_min, min_min)
         temp = temp2/(max_min + 1)
         
         temp2 = current_hour + temp
         current_hour = mod (temp2, max_hour + 1)
+        current_hour = max (current_hour, min_hour)
         temp = temp2/(max_hour + 1)
 
         temp2 = current_day + temp
@@ -186,14 +189,17 @@ module time_manager
 
         temp2 = sec_of_future_advance + advance_time_in
         sec_of_future_advance = mod (temp2, max_sec + 1)
+        sec_of_future_advance = max (sec_of_future_advance, min_sec)
         temp = temp2/(max_sec + 1)
 
         temp2 = min_of_future_advance + temp
         min_of_future_advance = mod (min_of_future_advance + temp, max_min + 1) 
+        min_of_future_advance = max (min_of_future_advance, min_min)
         temp = temp2/(max_min + 1)
         
         temp2 = hour_of_future_advance + temp
         hour_of_future_advance = mod (temp2, max_hour + 1)
+        hour_of_future_advance = max (hour_of_future_advance, min_hour)
         temp = temp2/(max_hour + 1)
 
         temp2 = day_of_future_advance + temp
