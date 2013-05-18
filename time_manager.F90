@@ -48,8 +48,6 @@ module time_manager
     integer (i4), parameter :: min_sec      =   0
     integer (i4), parameter :: max_sec      =   59 
 
-
-    
     contains
     !---------------------------------------------------------------------
     !                          subroutine time_manager_init
