@@ -16,6 +16,7 @@ program omega
     use time_manager,       only : current_year, current_mon, current_day, current_hour, current_min, current_sec 
     use time_manager,       only : is_new_year, is_new_mon, is_new_day, is_new_hour, is_new_min, is_new_sec 
     use time_manager,       only : is_end_year, is_end_mon, is_end_day, is_end_hour, is_end_min, is_end_sec 
+    use grid_manager,       only : grid_manager_init, grid_manager_finish
     use nc_read_write_interface
 
     implicit none
@@ -36,4 +37,26 @@ program omega
         end if
     end do
 
+    call omega_init
+
+    call omega_finish
+contains
+    !---------------------------------------------------------------------
+    !                          subroutine omega_init
+    !---------------------------------------------------------------------
+    subroutine omega_init()
+        call grid_manager_init 
+    end subroutine omega_init
+    !---------------------------------------------------------------------
+    !                      end of subroutine omega_init
+    !---------------------------------------------------------------------
+    !---------------------------------------------------------------------
+    !                          subroutine omega_finish
+    !---------------------------------------------------------------------
+    subroutine omega_finish()
+        call grid_manager_finish
+    end subroutine omega_finish
+    !---------------------------------------------------------------------
+    !                      end of subroutine omega_finish
+    !---------------------------------------------------------------------
 end program omega
