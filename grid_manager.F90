@@ -14,7 +14,7 @@ module grid_manager
     use namelist_manager,  only : num_lon, num_lat, num_lev 
     use namelist_manager,  only : grid_file, lon_name_in_grid_file, lat_name_in_grid_file, thickness_name_in_grid_file
     use nc_read_write_interface, only : nc_read_write_interface_read_var
-    use math_interface, only : check_1d_array_order
+    use math_interface, only : check_1d_array_order, check_array_region
     
 
     implicit none
@@ -54,6 +54,7 @@ module grid_manager
 
         call nc_read_write_interface_read_var (lon, grid_file, lon_name_in_grid_file, [1], [num_lon], [num_lon], 1)
         call check_1d_array_order ("lon", lon, num_lon, "ascending")
+        call check_array_region ("lon", lon, [num_lon], 1, -1.d-4, 310.0d0)
 
         call nc_read_write_interface_read_var (lat, grid_file, lat_name_in_grid_file, [1], [num_lat], [num_lat], 1)
         call check_1d_array_order ("lat", lat, num_lat, "ascending")
