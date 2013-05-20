@@ -44,7 +44,17 @@ module grid_manager
     !                          subroutine grid_manager_init
     !---------------------------------------------------------------------
     subroutine grid_manager_init()
-        integer :: i, j, k
+        integer (i4) :: i, j, k
+        real (r8), parameter :: eps_check     = 1.0d-4
+        real (r8), parameter :: lon_min_check = -eps_check 
+        real (r8), parameter :: lon_max_check = 360.0d0 + eps_check 
+        real (r8), parameter :: lat_min_check = -90.0d0 - eps_check
+        real (r8), parameter :: lat_max_check =  90.0d0 + eps_check
+        real (r8), parameter :: lev_min_check = -6000.0d0 
+        real (r8), parameter :: lev_max_check = eps_check
+        real (r8), parameter :: thick_min_check = eps_check 
+        real (r8), parameter :: thick_max_check = 1000.0d0
+        
 
         allocate (lon   (num_lon))
         allocate (lat   (num_lat))
@@ -54,13 +64,15 @@ module grid_manager
 
         call nc_read_write_interface_read_var (lon, grid_file, lon_name_in_grid_file, [1], [num_lon], [num_lon], 1)
         call check_1d_array_order ("lon", lon, num_lon, "ascending")
-        call check_array_region ("lon", lon, [num_lon], 1, -1.d-4, 310.0d0)
+        call check_array_region   ("lon", lon, [num_lon], 1, lon_min_check, lon_max_check)
 
         call nc_read_write_interface_read_var (lat, grid_file, lat_name_in_grid_file, [1], [num_lat], [num_lat], 1)
         call check_1d_array_order ("lat", lat, num_lat, "ascending")
+        call check_array_region   ("lat", lat, [num_lat], 1, lat_min_check, lat_max_check)
 
         call nc_read_write_interface_read_var (dzt, grid_file, thickness_name_in_grid_file, [1], [num_lev], [num_lev], 1)
         call check_1d_array_order ("dzt", dzt, num_lev, "ascending")
+        call check_array_region   ("dzt", dzt, [num_lev], 1, thick_min_check, thick_max_check)
 
         do k = 1, num_lev + 1
             if (k == 1) then
@@ -70,14 +82,14 @@ module grid_manager
             end if
         end do
         call check_1d_array_order ("lev_w", lev_w, num_lev + 1, "descending")
+        call check_array_region   ("lev_w", lev_w, [num_lev + 1], 1, lev_min_check, lev_max_check)
 
         do k = 1, num_lev
             lev_t (k) = 0.5d0*(lev_w (k) + lev_w (k+1)) 
         end do
         call check_1d_array_order ("lev_t", lev_t, num_lev, "descending")
+        call check_array_region   ("lev_t", lev_t, [num_lev], 1, lev_min_check, lev_max_check)
 
-        print *, lev_w 
-        print *, lev_t
     
     end subroutine grid_manager_init
     !---------------------------------------------------------------------
