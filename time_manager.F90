@@ -4,12 +4,12 @@ module time_manager
 !
 !
 ! record of revisions:
-!    date             programmer                description of change  
+!    date             programmer                description of change
 !==============    ===================   =============================
 ! 2011/12/22         wenyu huang                original code
 ! ...
 !
-!any comments please send to huangwenyu@mail.tsinghua.edu.cn                      
+!any comments please send to huangwenyu@mail.tsinghua.edu.cn
     use precision_manager, only : i4
 
     implicit none
@@ -18,8 +18,8 @@ module time_manager
     public time_manager_advance
     public current_year, current_mon, current_day, current_hour, current_min, current_sec
     public current_date
-    public is_new_year, is_new_mon, is_new_day, is_new_hour, is_new_min, is_new_sec 
-    public is_end_year, is_end_mon, is_end_day, is_end_hour, is_end_min, is_end_sec 
+    public is_new_year, is_new_mon, is_new_day, is_new_hour, is_new_min, is_new_sec
+    public is_end_year, is_end_mon, is_end_day, is_end_hour, is_end_min, is_end_sec
 
     integer (i4) :: current_year, year_of_last_advance, year_of_future_advance
     integer (i4) :: current_mon,  mon_of_last_advance,  mon_of_future_advance
@@ -44,9 +44,9 @@ module time_manager
     integer (i4), parameter :: min_hour     =   0
     integer (i4), parameter :: max_hour     =   23
     integer (i4), parameter :: min_min      =   0
-    integer (i4), parameter :: max_min      =   59 
+    integer (i4), parameter :: max_min      =   59
     integer (i4), parameter :: min_sec      =   0
-    integer (i4), parameter :: max_sec      =   59 
+    integer (i4), parameter :: max_sec      =   59
 
     contains
     !---------------------------------------------------------------------
@@ -56,7 +56,7 @@ module time_manager
         integer, intent (in), dimension (6) :: start_date_in
         integer, intent (in), dimension (6) :: end_date_in
         character (len = *),    intent (in) :: calendar_in
-    
+
         call check_if_right_date ("start_date", start_date_in, calendar_in)
         call check_if_right_date ("end_date",   end_date_in,   calendar_in)
 
@@ -89,7 +89,7 @@ module time_manager
         character (len = *), intent (in)    :: calendar_in
 
         integer :: temp, temp2
-        
+
         year_of_last_advance = current_year
         mon_of_last_advance  = current_mon
         day_of_last_advance  = current_day
@@ -110,17 +110,17 @@ module time_manager
         temp = temp2/(max_sec + 1)
 
         temp2 = current_min + temp
-        current_min = mod (current_min + temp, max_min + 1) 
+        current_min = mod (current_min + temp, max_min + 1)
         current_min = max (current_min, min_min)
         temp = temp2/(max_min + 1)
-        
+
         temp2 = current_hour + temp
         current_hour = mod (temp2, max_hour + 1)
         current_hour = max (current_hour, min_hour)
         temp = temp2/(max_hour + 1)
 
         temp2 = current_day + temp
-        current_day = mod (temp2, days_of_mon (current_year, current_mon, calendar_in) + 1) 
+        current_day = mod (temp2, days_of_mon (current_year, current_mon, calendar_in) + 1)
         current_day = max (current_day, min_day)
         temp = temp2/(days_of_mon (current_year, current_mon, calendar_in) + 1)
 
@@ -193,17 +193,17 @@ module time_manager
         temp = temp2/(max_sec + 1)
 
         temp2 = min_of_future_advance + temp
-        min_of_future_advance = mod (min_of_future_advance + temp, max_min + 1) 
+        min_of_future_advance = mod (min_of_future_advance + temp, max_min + 1)
         min_of_future_advance = max (min_of_future_advance, min_min)
         temp = temp2/(max_min + 1)
-        
+
         temp2 = hour_of_future_advance + temp
         hour_of_future_advance = mod (temp2, max_hour + 1)
         hour_of_future_advance = max (hour_of_future_advance, min_hour)
         temp = temp2/(max_hour + 1)
 
         temp2 = day_of_future_advance + temp
-        day_of_future_advance = mod (temp2, days_of_mon (year_of_future_advance, mon_of_future_advance, calendar_in) + 1) 
+        day_of_future_advance = mod (temp2, days_of_mon (year_of_future_advance, mon_of_future_advance, calendar_in) + 1)
         day_of_future_advance = max (day_of_future_advance, min_day)
         temp = temp2/(days_of_mon (year_of_future_advance, mon_of_future_advance, calendar_in) + 1)
 
@@ -230,7 +230,7 @@ module time_manager
         is_end_sec  = .false.
 
         if (year_of_future_advance /= current_year) then
-            is_end_year = .true. 
+            is_end_year = .true.
             is_end_mon  = .true.
             is_end_day  = .true.
             is_end_hour = .true.
@@ -276,7 +276,7 @@ module time_manager
     !---------------------------------------------------------------------
     !                          function days_of_mon
     !---------------------------------------------------------------------
-    integer (i4) function days_of_mon (year_in, mon_in, calendar_in) 
+    integer (i4) function days_of_mon (year_in, mon_in, calendar_in)
         integer (i4), intent (in)           :: year_in, mon_in
         character (len = *), intent (in)    :: calendar_in
 
@@ -290,7 +290,7 @@ module time_manager
             return
         end if
 
-        if (mon_in == 2) then 
+        if (mon_in == 2) then
             if (is_leap_year (year_in, calendar_in)) then
                 days_of_mon = 29
                 return
@@ -309,24 +309,24 @@ module time_manager
     !                          function is_leap_year
     !---------------------------------------------------------------------
     logical function is_leap_year (year_in, calendar_in)
-        integer (i4), intent (in)           :: year_in 
+        integer (i4), intent (in)           :: year_in
         character (len = *), intent (in)    :: calendar_in
-        
+
         is_leap_year = .false.
 
-        if (calendar_in == "noleap") return 
-        
-        if (mod (year_in, 100) == 0) then
-            if (mod (year_in, 400) == 0) then
-                is_leap_year = .true.
-                return
-            end if
-        else if (mod (year_in, 4) == 0) then
-            is_leap_year = .true.
-            return
+        if (calendar_in == "noleap") return
+
+        if  (mod(year_in,4) == 0) then
+                if (mod(year_in,100) /= 0) then
+                    is_leap_year    =   .true.
+                    return
+                else if (mod(year_in,400) == 0) then
+                    is_leap_year    =   .true.
+                    return
+                end if
         end if
 
-        return 
+        return
     end function is_leap_year
     !---------------------------------------------------------------------
     !                      end of function is_leap_year
@@ -336,8 +336,8 @@ module time_manager
     !---------------------------------------------------------------------
     subroutine check_if_right_date (date_name_in, date_in, calendar_in)
 
-        character (len = *), intent (in)            :: date_name_in 
-        integer (i4), intent (in), dimension (6)    :: date_in 
+        character (len = *), intent (in)            :: date_name_in
+        integer (i4), intent (in), dimension (6)    :: date_in
         character (len = *), intent (in)            :: calendar_in
 
         if (date_in (1) < min_year) then
@@ -349,7 +349,7 @@ module time_manager
             write (*, *) "Please check the input month of "//trim(date_name_in)//": ", date_in (2)
             stop
         end if
-    
+
         if (date_in (3) < min_day .or. date_in (3) > days_of_mon (date_in (1), date_in (2), calendar_in)) then
             write (*, *) "Please check the input day of "//trim(date_name_in)//": ", date_in (3)
             stop
